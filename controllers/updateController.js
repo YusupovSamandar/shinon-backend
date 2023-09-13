@@ -43,8 +43,21 @@ const loadMoreData = async (req, res) => {
     res.send(foundUpdates);
 }
 
+const getReport = async (req, res) => {
+    const { startDate, endDate } = req.body;
+    startDate = new Date(startDate);
+    endDate = new Date(endDate);
+
+    const foundUpdates = await Updates.find({
+        date: { $gte: startDate, $lte: endDate }
+    }).sort({ date: -1 });
+
+    res.send(foundUpdates);
+}
+
 module.exports = {
     createUpdate,
     getUpdateOnPatient,
-    loadMoreData
+    loadMoreData,
+    getReport
 };

@@ -27,7 +27,7 @@ const patientSchema = new mongoose.Schema({
     },
     currentStatus: {
         type: String,
-        enum: ['Pre-Work up', 'Surgery', 'Post Surgery', 'Post tx follow up updates'],
+        enum: ['Pre-Work up', 'Surgery', 'Post Surgery', 'Post tx follow up updates', 'complete'],
         default: 'Pre-Work up'
     }
 });
