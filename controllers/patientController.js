@@ -8,8 +8,8 @@ const getAllPatients = async (req, res) => {
     res.send(allPatients);
 }
 const createPatient = async (req, res) => {
-    const patientPicture = req.files['patientPicture'][0];
-    const patientPassport = req.files['patientPassport'][0];
+    const patientPicture = req.files['patientPicture'] ? req.files['patientPicture'][0] : undefined;
+    const patientPassport = req.files['patientPassport'] ? req.files['patientPassport'][0] : undefined;
     try {
         const newPatient = new Patients({
             ...req.body,
