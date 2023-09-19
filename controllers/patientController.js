@@ -56,14 +56,24 @@ const deletePatient = async (req, res) => {
 }
 
 const getOnePatient = async (req, res) => {
-    const foundPatient = await Patients.findOne({ _id: req.params.id });
-    res.send(foundPatient);
+    try {
+        const foundPatient = await Patients.findOne({ _id: req.params.id });
+        res.send(foundPatient);
+    } catch (error) {
+        res.status(404).json({ error: 'user not found' });
+    }
 }
 const updatePatient = async (req, res) => {
-    const updatedPatient = await Patients.findOneAndUpdate({ _id: req.params.id }, req.body, {
-        new: true
-    });
-    res.send(updatedPatient);
+    try {
+        const updatedPatient = await Patients.findOneAndUpdate({ _id: req.params.id }, req.body, {
+            new: true
+        });
+        res.send(updatedPatient);
+    } catch (error) {
+        res.status(404).json({ error: 'user not found' });
+    }
+
+
 }
 
 module.exports = {
