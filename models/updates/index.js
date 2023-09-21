@@ -5,6 +5,7 @@ const updateSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Patients', // Reference to the Patient model
     },
+    patientFullName: { type: String, required: true, default: "Bekzod" },
     date: {
         type: Date,
         default: Date.now,

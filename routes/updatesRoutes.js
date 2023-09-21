@@ -5,7 +5,7 @@ const updateController = require('../controllers/updateController');
 router.get('/:id', updateController.getUpdateOnPatient);
 router.get('/load/:id', updateController.loadMoreData);
 router.post('/', updateController.createUpdate);
-router.get('/report', updateController.getReport);
+router.post('/report', updateController.getReport);
 
 
 module.exports = router;

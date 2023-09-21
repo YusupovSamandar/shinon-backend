@@ -60,7 +60,7 @@ const getOnePatient = async (req, res) => {
         const foundPatient = await Patients.findOne({ _id: req.params.id });
         res.send(foundPatient);
     } catch (error) {
-        res.status(404).json({ error: 'user not found' });
+        res.status(404).json({ error: 'patient not found' });
     }
 }
 const updatePatient = async (req, res) => {
@@ -70,7 +70,7 @@ const updatePatient = async (req, res) => {
         });
         res.send(updatedPatient);
     } catch (error) {
-        res.status(404).json({ error: 'user not found' });
+        res.status(404).json({ error: 'patient not found' });
     }
 
 

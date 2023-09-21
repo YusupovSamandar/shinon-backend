@@ -36,8 +36,12 @@ const updateUser = async (req, res) => {
 }
 
 const getOneUser = async (req, res) => {
-    const foundUser = await User.findOne({ _id: req.params.id });
-    res.send(foundUser);
+    try {
+        const foundUser = await User.findOne({ _id: req.params.id });
+        res.send(foundUser);
+    } catch (error) {
+        res.status(404).json({ error: 'user not found' });
+    }
 }
 const deleteUser = async (req, res) => {
     const foundUser = await User.deleteOne({ _id: req.params.id });
@@ -57,15 +61,17 @@ const loginUser = async (req, res) => {
     }
 
     const token = jwt.sign({ userId: foundUser._id }, process.env.SECRET_COOKIES_KEY, {
-        expiresIn: '20s', // Token expiration time
+        expiresIn: '1h', // Token expiration time
     });
     const refreshToken = jwt.sign({ userId: foundUser._id }, process.env.SECRET_REFRESH_KEY, {
-        expiresIn: '7d', // Refresh token expiration time (longer)
+        expiresIn: '14d', // Refresh token expiration time (longer)
     });
+
+    const refreshTokenCookieConfig = req.body.rememberMe ? { httpOnly: true, expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000) } : { httpOnly: true }
 
 
     res.cookie('token', token, { httpOnly: true });
-    res.cookie('refreshToken', refreshToken, { httpOnly: true });``
+    res.cookie('refreshToken', refreshToken, refreshTokenCookieConfig);
 
     return res.status(200).json({ msg: 'Login successful', user: foundUser });
 }
