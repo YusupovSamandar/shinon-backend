@@ -1,4 +1,8 @@
 const User = require("./../models/users");
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
+dotenv.config();
+
 
 const getAllUsers = async (req, res) => {
     const allUsers = await User.find({});
@@ -19,18 +23,65 @@ const createUser = async (req, res) => {
         }
     }
 }
+
+const updateUser = async (req, res) => {
+    try {
+        const updatedUser = await User.findOneAndUpdate({ _id: req.params.id }, req.body, {
+            new: true
+        });
+        res.send(updatedUser);
+    } catch (err) {
+        res.status(500).send('Error: ' + err.message);
+    }
+}
+
 const getOneUser = async (req, res) => {
-    const foundUser = await User.findOne({ _id: req.params.id });
-    res.send(foundUser);
+    try {
+        const foundUser = await User.findOne({ _id: req.params.id });
+        res.send(foundUser);
+    } catch (error) {
+        res.status(404).json({ error: 'user not found' });
+    }
 }
 const deleteUser = async (req, res) => {
     const foundUser = await User.deleteOne({ _id: req.params.id });
     res.send(foundUser);
+}
+const logoutUser = async (req, res) => {
+    res.clearCookie('token', { httpOnly: true });
+    res.clearCookie('refreshToken', { httpOnly: true });
+    res.status(204).json({ msg: "logout success" });
+}
+
+const loginUser = async (req, res) => {
+    const { login, password } = req.body;
+    const foundUser = await User.findOne({ login, password });
+    if (!foundUser) {
+        return res.status(401).json({ error: 'Invalid username or password' });
+    }
+
+    const token = jwt.sign({ userId: foundUser._id }, process.env.SECRET_COOKIES_KEY, {
+        expiresIn: '1h', // Token expiration time
+    });
+    const refreshToken = jwt.sign({ userId: foundUser._id }, process.env.SECRET_REFRESH_KEY, {
+        expiresIn: '14d', // Refresh token expiration time (longer)
+    });
+
+    const refreshTokenCookieConfig = req.body.rememberMe ? { httpOnly: true, expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000) } : { httpOnly: true }
+
+
+    res.cookie('token', token, { httpOnly: true });
+    res.cookie('refreshToken', refreshToken, refreshTokenCookieConfig);
+
+    return res.status(200).json({ msg: 'Login successful', user: foundUser });
 }
 
 module.exports = {
     getAllUsers,
     createUser,
     getOneUser,
-    deleteUser
+    deleteUser,
+    updateUser,
+    loginUser,
+    logoutUser
 };
