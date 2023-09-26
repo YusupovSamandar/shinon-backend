@@ -31,7 +31,6 @@ const loadMoreData = async (req, res) => {
 
     const { numberOfDataToLoad, page } = req.body;
     const skip = (page - 1) * numberOfDataToLoad;
-
     const endOfDay = new Date(date);
     endOfDay.setHours(0, 0, 0, 0);
     const foundUpdates = await Updates.find({
@@ -60,9 +59,33 @@ const getReport = async (req, res) => {
     res.send(foundUpdates);
 }
 
+const getReportLoadMore = async (req, res) => {
+
+    let { startDate } = req.body;
+
+    if (!startDate) {
+        return res.send("provide end date")
+    }
+
+    const { numberOfDataToLoad, page } = req.body;
+    const skip = (page - 1) * numberOfDataToLoad;
+
+    startDate = new Date(startDate).toISOString();
+
+    const foundUpdates = await Updates.find({
+        date: { $lt: startDate }
+    })
+        .sort({ date: -1 })
+        .skip(skip)
+        .limit(numberOfDataToLoad);
+
+    res.send(foundUpdates);
+}
+
 module.exports = {
     createUpdate,
     getUpdateOnPatient,
     loadMoreData,
-    getReport
+    getReport,
+    getReportLoadMore
 };
