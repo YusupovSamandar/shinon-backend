@@ -4,7 +4,7 @@ const path = require('path');
 
 
 const getAllPatients = async (req, res) => {
-    const allPatients = await Patients.find({}, 'currentStatus nameOfDonor fullName');
+    const allPatients = await Patients.find({}, 'currentStatus nameOfDonor fullName dateOfVisaExpiry');
     res.send(allPatients);
 }
 const createPatient = async (req, res) => {
