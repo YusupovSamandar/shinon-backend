@@ -9,7 +9,7 @@ router.get('/:id', authenticateToken, userController.getOneUser);
 router.post('/login', userController.loginUser);
 router.post('/logout', userController.logoutUser);
 router.put('/:id', authenticateToken, userController.updateUser);
-router.post('/', upload.single('profilePicture'), authenticateToken, userController.createUser);
+router.post('/', upload.single('profilePicture'), userController.createUser);
 router.delete('/:id', authenticateToken, userController.deleteUser);
 
 module.exports = router;
