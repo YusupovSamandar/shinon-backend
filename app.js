@@ -4,7 +4,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
-// const session = require('express-session');
+const { createAdminUser } = require("./controllers/actions/users");
 const authenticateToken = require("./middlewares/authenticateToken");
 
 
@@ -25,17 +25,8 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-// app.use(
-//     session({
-//         secret: process.env.SECRET_COOKIES_KEY, // Change this to a strong, random secret
-//         resave: false,
-//         saveUninitialized: true,
-//         cookie: { secure: false }, // Set to true in production with HTTPS
-//     })
-// );
-
 app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "http://192.168.100.167:3000");
+    res.header("Access-Control-Allow-Origin", "http://192.168.100.17:3000");
     res.header(
         "Access-Control-Allow-Headers",
         "Origin, X-Requested-With, Content-Type, Accept-Type"
@@ -49,7 +40,7 @@ app.use('/uploads', express.static('uploads'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors({
-    origin: 'http://192.168.100.167:3000', // Replace with your client's origin
+    origin: 'http://192.168.100.17:3000', // Replace with your client's origin
     credentials: true, // Allow cookies
 }));
 
@@ -74,6 +65,8 @@ db.on('error', (err) => {
 
 db.once('open', () => {
     console.log('Connected to MongoDB');
+    // create admin if not already
+    createAdminUser();
 });
 
 // Define routes and controllers here
