@@ -40,7 +40,7 @@ app.use('/uploads', express.static('uploads'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors({
-    origin: ['https://shinon.vercel.app', 'https://shinon-backend.vercel.app'], // Replace with your client's origin
+    origin: 'https://shinon.vercel.app', // Replace with your client's origin
     credentials: true, // Allow cookies
 }));
 
