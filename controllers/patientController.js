@@ -30,7 +30,8 @@ const deletePatient = async (req, res) => {
         const deletingPath = path.join(__dirname, '../', filePath);
         fs.unlink(deletingPath, (err) => {
             if (err) {
-                return res.status(500).json({ error: 'Error deleting file' });
+                console.log(err);
+                return 'Error deleting file';
             } else {
                 return 'deleted';
             }
