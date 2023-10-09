@@ -21,7 +21,7 @@ const getUpdateOnPatient = async (req, res) => {
     const foundUpdates = await Updates.find({
         patientId: req.params.id,
         date: { $gte: startOfDay, $lte: endOfDay }
-    }).sort({ date: -1 }).reverse();
+    }).sort({ date: -1 });
 
     res.send(foundUpdates);
 }
@@ -39,8 +39,7 @@ const loadMoreData = async (req, res) => {
     })
         .sort({ date: -1 })
         .skip(skip)
-        .limit(numberOfDataToLoad)
-        .reverse();
+        .limit(numberOfDataToLoad);
 
     res.send(foundUpdates);
 }
