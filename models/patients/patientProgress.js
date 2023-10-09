@@ -4,33 +4,81 @@ let initialValue = {
         complete: false,
         details: [
             {
-                analysis: "Blood Tests",
+                analysis: "Blood Group",
                 done: false
             },
             {
-                analysis: "HBV DNA Quantitive",
+                analysis: "LP I (3939)",
                 done: false
             },
             {
-                analysis: "Hepatisis B Core antibodies",
+                analysis: "HIV I & II",
                 done: false
             },
             {
-                analysis: "CT scan",
+                analysis: "CMV IgG",
                 done: false
             },
             {
-                analysis: "Calcium scoring",
+                analysis: "HbsAg | HCV Ab",
                 done: false
             },
             {
-                analysis: "USG pelvis",
+                analysis: "Thyroid Profile",
                 done: false
             },
             {
-                analysis: "USG abdomen",
+                analysis: "Tumor Markers",
                 done: false
-            }
+            },
+            {
+                analysis: "Urine Analysis",
+                done: false
+            },
+            {
+                analysis: "Blood Culture Sensitivity",
+                done: false
+            },
+            {
+                analysis: "2D Echo with PA Pressure",
+                done: false
+            },
+            {
+                analysis: "Finger Prick FBS | HBA1C",
+                done: false
+            },
+            {
+                analysis: "SpO2 @RA | Bubble Contrast Echo",
+                done: false
+            },
+            {
+                analysis: "CT Angiogram Liver | US Liver Doppler",
+                done: false
+            },
+            {
+                analysis: "UGI Endoscopy",
+                done: false
+            },
+            {
+                analysis: "ENT Clearance",
+                done: false
+            },
+            {
+                analysis: "UPT",
+                done: false
+            },
+            {
+                analysis: "USG Pelvis",
+                done: false
+            },
+            {
+                analysis: "USG B/L Breast",
+                done: false
+            },
+            {
+                analysis: "PAP Smear",
+                done: false
+            },
         ],
     },
     surgery: {
