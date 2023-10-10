@@ -13,11 +13,11 @@ const createUpdate = async (req, res) => {
     }
 }
 const getUpdateOnPatient = async (req, res) => {
-    const date = new Date()
-    const startOfDay = new Date(date);
-    startOfDay.setHours(0, 0, 0, 0);
-    const endOfDay = new Date(date);
-    endOfDay.setHours(23, 59, 59, 999);
+    const { myStartDate, myEndDate } = req.body;
+
+    const startOfDay = new Date(myStartDate);
+    const endOfDay = new Date(myEndDate);
+
     const foundUpdates = await Updates.find({
         patientId: req.params.id,
         date: { $gte: startOfDay, $lte: endOfDay }
@@ -27,12 +27,13 @@ const getUpdateOnPatient = async (req, res) => {
 }
 
 const loadMoreData = async (req, res) => {
-    const date = new Date();
+    const { myEndDate } = req.body;
 
     const { numberOfDataToLoad, page } = req.body;
     const skip = (page - 1) * numberOfDataToLoad;
-    const endOfDay = new Date(date);
-    endOfDay.setHours(0, 0, 0, 0);
+
+    const endOfDay = new Date(myEndDate);
+
     const foundUpdates = await Updates.find({
         patientId: req.params.id,
         date: { $lt: endOfDay },
