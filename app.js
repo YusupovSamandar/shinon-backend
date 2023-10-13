@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const { createAdminUser } = require("./controllers/actions/users");
 const authenticateToken = require("./middlewares/authenticateToken");
-
+const { cron } = require("./controllers/cron/clean-messages");
 
 // api routes
 
@@ -68,6 +68,8 @@ db.once('open', () => {
     // create admin if not already
     createAdminUser();
 });
+
+app.use("/cron", cron);
 
 // Define routes and controllers here
 app.use('/api/users', userRoutes);
