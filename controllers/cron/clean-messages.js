@@ -10,7 +10,7 @@ export const cron = async () => {
         const query = { date: { $lt: retentionPeriod } };
 
         // Remove updates that match the query
-        const result = await Updates.deleteMany({});
+        const result = await Updates.deleteMany(query);
 
         console.log(`${result.deletedCount} old updates removed.`);
     } catch (error) {
