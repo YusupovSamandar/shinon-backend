@@ -48,8 +48,8 @@ const deleteUser = async (req, res) => {
     res.send(foundUser);
 }
 const logoutUser = async (req, res) => {
-    res.clearCookie('token', { httpOnly: true });
-    res.clearCookie('refreshToken', { httpOnly: true });
+    res.clearCookie('token', { httpOnly: true, secure: true, domain: 'vercel.app', path: '/', });
+    res.clearCookie('refreshToken', { httpOnly: true, secure: true, domain: 'vercel.app', path: '/', });
     res.status(204).json({ msg: "logout success" });
 }
 
