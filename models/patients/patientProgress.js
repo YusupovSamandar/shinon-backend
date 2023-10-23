@@ -119,7 +119,27 @@ const patientProgressSchema = new mongoose.Schema({
     },
 });
 
+const nonTransplantValue = {
+    preWorkup: {
+        complete: false,
+        details: []
+    },
+    surgery: {
+        complete: false,
+        details: []
+    },
+    postSurgery: {
+        complete: false,
+        details: []
+    },
+    postTxFollowUp: {
+        complete: false,
+        details: [],
+    }
+}
+
 module.exports = {
     patientProgressSchema,
-    initialValue
+    initialValue,
+    nonTransplantValue
 }

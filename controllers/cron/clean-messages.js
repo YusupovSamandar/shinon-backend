@@ -1,5 +1,5 @@
 const Updates = require('./../../models/updates'); // Import your Update model
-export const cron = async () => {
+const cron = async () => {
     try {
         // Calculate the date 3 months ago
         const retentionPeriod = new Date();
@@ -17,3 +17,7 @@ export const cron = async () => {
         console.error('Error removing old updates:', error);
     }
 };
+
+module.exports = {
+    cron
+}

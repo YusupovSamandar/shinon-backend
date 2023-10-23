@@ -7,6 +7,12 @@ const patientSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
+    typeOfPatient: {
+        type: String,
+        enum: ['transplant', 'non-transplant'],
+        required: true,
+        default: 'transplant'
+    },
     patientUHID: {
         type: String,
         required: true,
@@ -37,7 +43,7 @@ const patientSchema = new mongoose.Schema({
     dischargeDate: String,
     nameOfDonor: {
         type: String,
-        required: true
+        default: 'none'
     },
     patientPicture: String,
     patientPassport: String,
@@ -57,6 +63,11 @@ const patientSchema = new mongoose.Schema({
         type: String,
         enum: ['Pre-Work up', 'Surgery', 'Post Surgery', 'Post tx follow up updates', 'complete'],
         default: 'Pre-Work up'
+    },
+    extendingVisa: {
+        type: Boolean,
+        required: true,
+        default: false
     }
 });
 
