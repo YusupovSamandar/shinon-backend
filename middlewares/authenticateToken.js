@@ -27,7 +27,7 @@ module.exports = function authenticateToken(req, res, next) {
 
 
                 // Set the new access token in cookies
-                res.cookie('token', newAccessToken, { httpOnly: true });
+                res.cookie('token', newAccessToken, { httpOnly: true, sameSite: 'None', secure: true });
                 console.log("new token added");
 
                 // Continue with the request

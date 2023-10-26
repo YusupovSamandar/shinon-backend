@@ -48,4 +48,10 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-module.exports = upload;
+const remoteStorage = multer.memoryStorage();
+const remoteUpload = multer({ storage: remoteStorage })
+
+module.exports = {
+    upload,
+    remoteUpload
+};

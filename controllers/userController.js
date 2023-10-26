@@ -1,8 +1,16 @@
 const User = require("./../models/users");
 const jwt = require('jsonwebtoken');
+const path = require('path');
 const dotenv = require('dotenv');
+const sharp = require("sharp");
 dotenv.config();
 
+const { PutObjectCommand, GetObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3");
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+const s3 = require("./../s3remoteConfig");
+
+
+const bucketName = process.env.BUCKET_NAME;
 
 const getAllUsers = async (req, res) => {
     const allUsers = await User.find({});
@@ -10,8 +18,28 @@ const getAllUsers = async (req, res) => {
 }
 
 const createUser = async (req, res) => {
+    // shinon-bucket
+    //shinon-bucket-access
+
     try {
-        const newUser = new User({ ...req.body, profilePicture: req.file ? `/uploads/users/${req.file.filename}` : 'none' });
+        const fileExtension = req.file && path.extname(req.file.originalname);
+        const userLogin = req.body.login;
+        const uniqueFilename = req.file && `${userLogin}${fileExtension}`;
+        const profPicName = req.file ? `${uniqueFilename}` : 'none'
+
+        const resizedProfilePicBuffer = await sharp(req.file.buffer).resize({ height: 500, width: 500, fit: "contain" }).toBuffer();
+
+        if (req.file) {
+            const params = {
+                Bucket: bucketName,
+                Key: uniqueFilename,
+                Body: resizedProfilePicBuffer,
+                ContentType: req.file.mimetype
+            }
+            const command = new PutObjectCommand(params);
+            await s3.send(command);
+        }
+        const newUser = new User({ ...req.body, profilePicture: profPicName });
         const savedUser = await newUser.save();
         res.send(savedUser);
     } catch (err) {
@@ -38,18 +66,37 @@ const updateUser = async (req, res) => {
 const getOneUser = async (req, res) => {
     try {
         const foundUser = await User.findOne({ _id: req.params.id });
-        res.send(foundUser);
+        if (foundUser.profilePicture !== "none") {
+            const getObjectParams = {
+                Bucket: bucketName,
+                Key: foundUser.profilePicture
+            }
+            const command = new GetObjectCommand(getObjectParams);
+            const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+            res.send({ ...foundUser._doc, profilePictureURL: url });
+        } else {
+            res.send(foundUser);
+        }
     } catch (error) {
         res.status(404).json({ error: 'user not found' });
     }
 }
 const deleteUser = async (req, res) => {
-    const foundUser = await User.deleteOne({ _id: req.params.id });
+    const foundUser = await User.findOneAndDelete({ _id: req.params.id });
+    if (foundUser.profilePicture !== "none") {
+        const deleteObjectParams = {
+            Bucket: bucketName,
+            Key: foundUser.profilePicture
+        }
+        const command = new DeleteObjectCommand(deleteObjectParams);
+        await s3.send(command);
+    }
+
     res.send(foundUser);
 }
 const logoutUser = async (req, res) => {
-    res.clearCookie('token', { httpOnly: true });
-    res.clearCookie('refreshToken', { httpOnly: true });
+    res.clearCookie('token', { httpOnly: true, sameSite: 'None', secure: true });
+    res.clearCookie('refreshToken', { httpOnly: true, sameSite: 'None', secure: true });
     res.status(204).json({ msg: "logout success" });
 }
 
@@ -67,7 +114,7 @@ const loginUser = async (req, res) => {
         expiresIn: '14d', // Refresh token expiration time (longer)
     });
 
-    const refreshTokenCookieConfig = req.body.rememberMe ? { httpOnly: true, expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000), sameSite: 'None', secure: true } : { httpOnly: true, sameSite: 'None', secure: true }
+    const refreshTokenCookieConfig = req.body.rememberMe ? { httpOnly: true, expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000) } : { httpOnly: true, sameSite: 'None', secure: true }
 
     console.log(token);
     console.log(refreshToken);
@@ -86,3 +133,7 @@ module.exports = {
     loginUser,
     logoutUser
 };
+
+// bicypt - password
+// allow cookies Safari
+// run both in the same dev
