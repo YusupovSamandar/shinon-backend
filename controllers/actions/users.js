@@ -10,6 +10,7 @@ async function createAdminUser() {
                 const newUser = new User({
                     login: 'admin',
                     password: 'admin123', // Set a secure password for the admin user
+                    profilePicture: 'none',
                     role: "admin", // Assign admin privileges to this user
                 });
                 await newUser.save();
