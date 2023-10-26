@@ -38,7 +38,6 @@ const createPatient = async (req, res) => {
         const savedPatient = await newPatient.save();
         // upload s3
         if (patientPicture) {
-            console.log(bucketName);
             const resizedPtPicBuffer = await sharp(patientPicture.buffer).resize({ height: 500, width: 500, fit: "contain" }).toBuffer()
             const params = {
                 Bucket: bucketName,
