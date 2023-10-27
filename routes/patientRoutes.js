@@ -9,5 +9,8 @@ router.put('/:id', patientController.updatePatient);
 router.post('/', remoteUpload.fields([{ name: 'patientPicture', maxCount: 1 }, { name: 'patientPassport', maxCount: 1 }]), patientController.createPatient);
 router.delete('/:id', patientController.deletePatient);
 router.get('/passport/:id', patientController.downloadPatientPassport);
+router.get('/summary/:id', patientController.downloadSummary);
+router.post('/passport/:id', remoteUpload.single('patientPassport'), patientController.uploadPassport);
+router.post('/summary/:id', remoteUpload.single('dischargeSummary'), patientController.uploadDischargeSummary);
 
 module.exports = router;

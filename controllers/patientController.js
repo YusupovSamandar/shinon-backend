@@ -94,7 +94,9 @@ const deletePatient = async (req, res) => {
         }
         if (deletingPatient.patientPicture !== "none") {
             await deleteFile(deletingPatient.patientPicture);
-
+        }
+        if (deletingPatient.dischargeSummary) {
+            await deleteFile(deletingPatient.dischargeSummary);
         }
         const response = await Patients.deleteOne({ _id: req.params.id });
         res.send(response);
@@ -150,6 +152,64 @@ const downloadPatientPassport = async (req, res) => {
         res.status(404).json({ error: 'file not found' });
     }
 }
+const downloadSummary = async (req, res) => {
+    const foundPatient = await Patients.findOne({ _id: req.params.id });
+    if (foundPatient.dischargeSummary) {
+        const getObjectParams = {
+            Bucket: bucketName,
+            Key: foundPatient.dischargeSummary
+        }
+        const command = new GetObjectCommand(getObjectParams);
+        const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+        res.send({ url });
+
+    } else {
+        res.status(404).json({ error: 'file not found' });
+    }
+}
+
+const uploadPassport = async (req, res) => {
+    const foundPatient = await Patients.findOne({ _id: req.params.id });
+    if (req.file && foundPatient) {
+        const fileNameExt = path.extname(req.file.originalname);
+        const newFileName = `${foundPatient.fullName}${fileNameExt}`
+        const params = {
+            Bucket: bucketName,
+            Key: "passports/" + newFileName,
+            Body: req.file.buffer,
+            ContentType: req.file.mimetype
+        }
+
+        const command = new PutObjectCommand(params);
+        await s3.send(command);
+        foundPatient.patientPassport = "passports/" + newFileName;
+        foundPatient.save();
+        res.status(200).send({ uploadedFileName: "passports/" + newFileName })
+    } else {
+        res.status(500).send('Error: no file provided');
+    }
+}
+const uploadDischargeSummary = async (req, res) => {
+    const foundPatient = await Patients.findOne({ _id: req.params.id });
+    if (req.file && foundPatient) {
+        const fileNameExt = path.extname(req.file.originalname);
+        const newFileName = `${foundPatient.fullName}${fileNameExt}`
+        const params = {
+            Bucket: bucketName,
+            Key: "summary/" + newFileName,
+            Body: req.file.buffer,
+            ContentType: req.file.mimetype
+        }
+
+        const command = new PutObjectCommand(params);
+        await s3.send(command);
+        foundPatient.dischargeSummary = "summary/" + newFileName;
+        foundPatient.save();
+        res.status(200).send({ uploadedFileName: "summary/" + newFileName })
+    } else {
+        res.status(500).send('Error: no file provided');
+    }
+}
 
 module.exports = {
     getAllPatients,
@@ -157,5 +217,8 @@ module.exports = {
     deletePatient,
     getOnePatient,
     updatePatient,
-    downloadPatientPassport
+    downloadPatientPassport,
+    uploadPassport,
+    uploadDischargeSummary,
+    downloadSummary
 };

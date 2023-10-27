@@ -47,6 +47,7 @@ const patientSchema = new mongoose.Schema({
     },
     patientPicture: String,
     patientPassport: String,
+    dischargeSummary: String,
     dateOfVisaExpiry: {
         type: Date,
         required: true
