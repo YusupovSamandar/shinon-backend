@@ -114,11 +114,13 @@ const loginUser = async (req, res) => {
         expiresIn: '14d', // Refresh token expiration time (longer)
     });
 
-    const refreshTokenCookieConfig = req.body.rememberMe ? { httpOnly: true, expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000) } : { httpOnly: true, sameSite: 'None', secure: true }
+    const basicTokenConfig = { httpOnly: true, sameSite: 'None', secure: true }
+
+    const refreshTokenCookieConfig = req.body.rememberMe ? { ...basicTokenConfig, expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000) } : basicTokenConfig
 
     console.log(token);
     console.log(refreshToken);
-    res.cookie('token', token, { httpOnly: true, sameSite: 'None', secure: true });
+    res.cookie('token', token, basicTokenConfig);
     res.cookie('refreshToken', refreshToken, refreshTokenCookieConfig);
 
     return res.status(200).json({ msg: 'Login successful', user: foundUser });
