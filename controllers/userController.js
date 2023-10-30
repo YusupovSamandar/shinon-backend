@@ -27,9 +27,9 @@ const createUser = async (req, res) => {
         const uniqueFilename = req.file && `${userLogin}${fileExtension}`;
         const profPicName = req.file ? `${uniqueFilename}` : 'none'
 
-        const resizedProfilePicBuffer = await sharp(req.file.buffer).resize({ height: 500, width: 500, fit: "contain" }).toBuffer();
 
         if (req.file) {
+            const resizedProfilePicBuffer = await sharp(req.file.buffer).resize({ height: 500, width: 500, fit: "contain" }).toBuffer();
             const params = {
                 Bucket: bucketName,
                 Key: uniqueFilename,
