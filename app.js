@@ -73,8 +73,8 @@ app.use("/cron", cron);
 
 // Define routes and controllers here
 app.use('/api/users', userRoutes);
-app.use('/api/patients', authenticateToken, patientRoutes);
-app.use('/api/updates', authenticateToken, updatesRoutes);
+app.use('/api/patients', patientRoutes);
+app.use('/api/updates', updatesRoutes);
 
 
 
