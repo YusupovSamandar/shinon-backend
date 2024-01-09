@@ -5,7 +5,7 @@ const { remoteUpload } = require("./../multerConfig");
 // Define user-related routes
 router.get('/:hospitalName', patientController.getAllPatients);
 router.get('/other/:hospitalName', patientController.getAllOtherPatients);
-router.get('/complete', patientController.getCompletePatients);
+router.get('/complete/all', patientController.getCompletePatients);
 router.get('/one/:id', patientController.getOnePatient);
 router.put('/:id', patientController.updatePatient);
 router.post('/', remoteUpload.fields([{ name: 'patientPicture', maxCount: 1 }, { name: 'patientPassport', maxCount: 1 }]), patientController.createPatient);
