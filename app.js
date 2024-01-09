@@ -27,7 +27,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "https://shinon.vercel.app");
+    res.header("Access-Control-Allow-Origin", "http://192.168.1.106:3000");
     res.header(
         "Access-Control-Allow-Headers",
         "Origin, X-Requested-With, Content-Type, Accept-Type"
@@ -41,7 +41,7 @@ app.use('/uploads', express.static('uploads'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors({
-    origin: 'https://shinon.vercel.app', // Replace with your client's origin
+    origin: 'http://192.168.1.106:3000', // Replace with your client's origin
     credentials: true, // Allow cookies
 }));
 
