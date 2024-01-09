@@ -12,6 +12,7 @@ const { cron } = require("./controllers/cron/clean-messages");
 
 const userRoutes = require('./routes/userRoutes');
 const patientRoutes = require('./routes/patientRoutes');
+const hospitalRoutes = require('./routes/hospitalRoutes');
 const updatesRoutes = require('./routes/updatesRoutes');
 
 
@@ -75,6 +76,7 @@ app.use("/cron", cron);
 app.use('/api/users', userRoutes);
 app.use('/api/patients', patientRoutes);
 app.use('/api/updates', updatesRoutes);
+app.use('/api/hospitals', hospitalRoutes);
 
 
 

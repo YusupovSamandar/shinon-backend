@@ -10,7 +10,13 @@ const bucketName = process.env.BUCKET_NAME;
 
 
 const getAllPatients = async (req, res) => {
-    const allPatients = await Patients.find({ currentStatus: { "$ne": 'complete' } }, 'currentStatus nameOfDonor fullName dateOfVisaExpiry patientUHID extendingVisa');
+    const { hospitalName } = req.params;
+    const allPatients = await Patients.find({ currentStatus: { "$ne": 'complete' }, hospital: hospitalName }, 'currentStatus nameOfDonor fullName dateOfVisaExpiry patientUHID extendingVisa');
+    res.send(allPatients);
+}
+const getAllOtherPatients = async (req, res) => {
+    const { hospitalName } = req.params;
+    const allPatients = await Patients.find({ currentStatus: { "$ne": 'complete' }, hospital: { "$ne": hospitalName } }, 'currentStatus nameOfDonor fullName patientUHID');
     res.send(allPatients);
 }
 const getCompletePatients = async (req, res) => {
@@ -225,5 +231,6 @@ module.exports = {
     uploadPassport,
     uploadDischargeSummary,
     downloadSummary,
-    getCompletePatients
+    getCompletePatients,
+    getAllOtherPatients
 };

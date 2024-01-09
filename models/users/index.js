@@ -11,6 +11,11 @@ const usersSchema = new mongoose.Schema({
         required: true
     },
     profilePicture: String,
+    hospital: {
+        type: String,
+        default: 'FHN',
+        required: true,
+    },
     role: {
         type: String,
         enum: ['admin', 'viewer', 'interpreter', 'developer'],

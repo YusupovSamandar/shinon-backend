@@ -26,7 +26,10 @@ const patientSchema = new mongoose.Schema({
     attendantPassportNumber: String,
     attendant2PassportNumber: String,
     country: String,
-    hospital: String,
+    hospital: {
+        type: String,
+        required: true
+    },
     visaType: String,
     phoneNumber: String,
     speciality: String,
